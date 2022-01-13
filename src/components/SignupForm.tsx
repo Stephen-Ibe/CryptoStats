@@ -1,6 +1,7 @@
 import { Button, TextField, Link as MuiLink } from "@mui/material";
 import React, { ChangeEvent, FC, useState } from "react";
 import { Link } from "react-router-dom";
+import { useCreateUserMutation } from "../apis/users.api";
 
 const SignupForm: FC = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +12,8 @@ const SignupForm: FC = () => {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
+  const [createUser] = useCreateUserMutation();
+
   const handleInputChange = (e: any) => {
     setFormData({
       ...formData,
@@ -18,7 +21,8 @@ const SignupForm: FC = () => {
     });
   };
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
+    const { email, password } = formData;
     if (!formData.email) {
       setEmailError(true);
     } else {
@@ -30,6 +34,8 @@ const SignupForm: FC = () => {
     } else {
       setPasswordError(false);
     }
+
+    await createUser({ email, password });
   };
 
   return (
