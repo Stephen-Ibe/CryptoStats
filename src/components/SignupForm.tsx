@@ -1,8 +1,8 @@
 import { Button, TextField, Link as MuiLink } from "@mui/material";
-import React, { FC, useState } from "react";
+import React, { ChangeEvent, FC, useState } from "react";
 import { Link } from "react-router-dom";
 
-const LoginForm: FC = () => {
+const SignupForm: FC = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -18,7 +18,7 @@ const LoginForm: FC = () => {
     });
   };
 
-  const handleLogin = () => {
+  const handleSignup = () => {
     if (!formData.email) {
       setEmailError(true);
     } else {
@@ -57,17 +57,19 @@ const LoginForm: FC = () => {
           required
         />
       </div>
-      <Button className="w-80" variant="contained" onClick={handleLogin}>
-        <span className="p-1">Login</span>
+      <Button className="w-80" variant="contained" onClick={handleSignup}>
+        <span className="p-1">Create Account</span>
       </Button>
       <div className="flex flex-col gap-4">
         <p className="text-center">OR</p>
-        <Link to="/signup" className="">
-          <MuiLink>Create an Account</MuiLink>
+        <Link to="/login" className="text-center">
+          Already have an account?
+          <br />
+          <MuiLink>Click to Login</MuiLink>
         </Link>
       </div>
     </div>
   );
 };
 
-export default LoginForm;
+export default SignupForm;
