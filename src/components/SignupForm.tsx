@@ -1,7 +1,11 @@
 import { Button, TextField, Link as MuiLink } from "@mui/material";
 import React, { ChangeEvent, FC, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../apis/auth.api";
 import { useCreateUserMutation } from "../apis/users.api";
+import { useAppDispatch } from "../app/hooks";
+import { setAuthState } from "../app/slices/authSlice";
+import { User } from "../models/User";
 
 const SignupForm: FC = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +17,9 @@ const SignupForm: FC = () => {
   const [passwordError, setPasswordError] = useState(false);
 
   const [createUser] = useCreateUserMutation();
+  const [login] = useLoginMutation();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleInputChange = (e: any) => {
     setFormData({
@@ -35,7 +42,14 @@ const SignupForm: FC = () => {
       setPasswordError(false);
     }
 
-    await createUser({ email, password });
+    try {
+      await createUser({ email, password });
+      const response = (await login({ email, password })) as { data: User };
+      dispatch(setAuthState({ user: response.data }));
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
